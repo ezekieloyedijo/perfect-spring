@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================================
+  pom.xml  =  the "shopping list + recipe card" of a Maven project.
+  ============================================================================
+  Think of Maven as a personal shopper + kitchen assistant:
+    * <dependencies>  -> the shopping list (libraries Maven downloads for us)
+    * <parent>        -> a "starter pack" that already fixes compatible versions
+    * <build>         -> the recipe steps (compile, test, package)
+
+  ONE Maven project holds ALL 8 topics. Each topic lives in its own package:
+    com.perfectspring.topic01_introduction
+    com.perfectspring.topic02_core
+    ... up to topic08_cloud
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- The parent = a pre-tested set of library versions that work together. -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.12</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.perfectspring</groupId>
+    <artifactId>perfect-spring</artifactId>
+    <version>1.0.0</version>
+    <name>Perfect Spring - Learn Spring Step by Step</name>
+
+    <properties>
+        <java.version>17</java.version>
+        <spring-cloud.version>2025.0.3</spring-cloud.version>
+        <!--
+          start-class = which main() runs when you type:
+              mvnw spring-boot:run
+          Override it for any lesson, for example:
+              mvnw spring-boot:run -Dstart-class=com.perfectspring.topic01_introduction.example.Example1_TightCoupling
+        -->
+        <start-class>com.perfectspring.topic07_boot.project.CourseRegistrationApp</start-class>
+    </properties>
+
+    <dependencies>
+        <!-- ===== Topics 1, 2, 4: Spring Core + Web MVC (+ an embedded Tomcat server) ===== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- ===== Topic 3 + 7: Data Access (JDBC, JdbcTemplate, Spring Data JPA) ===== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <!-- H2 = a tiny database that lives in memory. No installation needed. -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ===== Topic 7: input validation (@NotBlank, @Min, ...) ===== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- ===== Topic 5: Spring Security ===== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- ===== Topic 8: Spring Cloud (service registry, service discovery, Feign, circuit breaker) ===== -->
+        <!-- Note: Eureka brings an XML library. See com.perfectspring.common.JsonOnlyWebConfig for why that matters. -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+        </dependency>
+
+        <!-- ===== Topic 6: Testing (JUnit 5, Mockito, AssertJ, Spring Test, MockMvc) ===== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- Spring Cloud versions are managed by their own "bill of materials" (BOM). -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!-- Lets us run ANY main() with: mvnw spring-boot:run -Dstart-class=... -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

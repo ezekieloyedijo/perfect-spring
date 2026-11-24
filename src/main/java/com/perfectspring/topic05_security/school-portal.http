@@ -1,0 +1,52 @@
+### =====================================================================
+### Topic 5 School Portal (port 8085). Use the VS Code "REST Client" extension.
+### REST Client turns "Basic user:password" into the proper Base64 header for you.
+### =====================================================================
+
+### 1. Public: no login needed -> 200
+GET http://localhost:8085/public/notice-board
+
+### 2. No login -> 401 Unauthorized (who are you?)
+GET http://localhost:8085/me
+
+### 3. Wrong password -> 401
+GET http://localhost:8085/me
+Authorization: Basic ada:wrongpassword
+
+### 4. Logged in as ada -> 200
+GET http://localhost:8085/me
+Authorization: Basic ada:ada123
+
+### 5. Student sees ONLY their own results
+GET http://localhost:8085/results/my
+Authorization: Basic ada:ada123
+
+### 6. Student tries the admin area -> 403 Forbidden (we know you, but no)
+GET http://localhost:8085/admin/users
+Authorization: Basic ada:ada123
+
+### 7. Admin opens the admin area -> 200
+GET http://localhost:8085/admin/users
+Authorization: Basic admin:admin123
+
+### 8. Teacher records a score -> 201
+POST http://localhost:8085/results
+Authorization: Basic mrbello:teach123
+Content-Type: application/json
+
+{ "student": "tunde", "subject": "Physics", "score": 81 }
+
+### 9. Student tries to record a score -> 403
+POST http://localhost:8085/results
+Authorization: Basic ada:ada123
+Content-Type: application/json
+
+{ "student": "ada", "subject": "Maths", "score": 100 }
+
+### 10. Tunde checks his results (should include Physics now)
+GET http://localhost:8085/results/my
+Authorization: Basic tunde:tunde123
+
+### 11. Admin clears all results -> 204
+DELETE http://localhost:8085/admin/results
+Authorization: Basic admin:admin123

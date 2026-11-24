@@ -1,0 +1,37 @@
+### =====================================================================
+### Topic 8: three apps. Start: registry (8761) -> catalog (8081) -> enrollment (8082)
+### Eureka dashboard: http://localhost:8761
+### =====================================================================
+
+### Ask the catalog DIRECTLY (by address)
+GET http://localhost:8081/catalog/courses
+
+### Enroll: the enrollment service finds "catalog-service" through Eureka, calls it with Feign -> CONFIRMED (201)
+POST http://localhost:8082/enrollments
+Content-Type: application/json
+
+{ "student": "ada", "courseCode": "CS101" }
+
+### Another one: start a 2nd catalog on port 8091 and send this a few times. Watch servedByCatalogPort!
+POST http://localhost:8082/enrollments
+Content-Type: application/json
+
+{ "student": "tunde", "courseCode": "CLOUD1" }
+
+### A course that doesn't exist -> 400 (the catalog answered 404, a NORMAL answer)
+POST http://localhost:8082/enrollments
+Content-Type: application/json
+
+{ "student": "musa", "courseCode": "MAGIC999" }
+
+### Now STOP every catalog app (Ctrl + C) and send this -> PENDING (202) from the FALLBACK
+POST http://localhost:8082/enrollments
+Content-Type: application/json
+
+{ "student": "chioma", "courseCode": "CS102" }
+
+### All enrollments kept by the enrollment service
+GET http://localhost:8082/enrollments
+
+### Health of each service (Actuator, from Topic 7)
+GET http://localhost:8082/actuator/health

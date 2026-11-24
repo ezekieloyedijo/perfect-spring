@@ -1,0 +1,49 @@
+### =====================================================================
+### Topic 4 requests. In VS Code install the "REST Client" extension,
+### then click "Send Request" above any request below.
+### =====================================================================
+
+### --- Example 2 (port 8042) ---------------------------------------------
+GET http://localhost:8042/hello?name=Ada
+
+###
+GET http://localhost:8042/students/1
+
+###
+POST http://localhost:8042/echo
+Content-Type: application/json
+
+{ "name": "Chioma", "age": 17 }
+
+
+### --- Project: Homework Tracker (port 8084) ------------------------------
+
+### List all homework
+GET http://localhost:8084/homework
+
+### Filter by subject (@RequestParam)
+GET http://localhost:8084/homework?subject=Maths
+
+### Get one (@PathVariable)
+GET http://localhost:8084/homework/1
+
+### Get one that does NOT exist -> 404 from GlobalErrorHandler
+GET http://localhost:8084/homework/99
+
+### Create (@RequestBody) -> 201 Created
+POST http://localhost:8084/homework
+Content-Type: application/json
+
+{ "subject": "Physics", "description": "Read chapter 3 on motion" }
+
+### Create with an empty subject -> 400 Bad Request
+POST http://localhost:8084/homework
+Content-Type: application/json
+
+{ "subject": "", "description": "This should fail" }
+
+### Mark as done
+PUT http://localhost:8084/homework/1/done
+
+### Delete -> 204 No Content
+DELETE http://localhost:8084/homework/2
